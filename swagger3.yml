@@ -1,0 +1,24 @@
+openapi: 3.0.0
+info:
+  title: Cloud Progress API
+  version: beta-2020-jan
+servers:
+- url: https://cloudprogress.io
+paths:
+  # todo: authorization, body schemas, ret schemas
+  /task/merge/{task}:
+    post:
+      operationId: SetPath
+      summary: Set path
+      description: Update the ProgressRow at a path.
+      tags: ['service-api']
+  /task/create:
+    post:
+      summary: Create task
+      description: Create a task and get a taskId back. Call this before setting any paths.
+      tags: ['service-api']
+  /task/finish/{task}:
+    post:
+      summary: Finish task
+      description: Mark a task inactive, which removes it from 'active tasks' list in UI and makes it available for ETA prediction.
+      tags: ['service-api']
