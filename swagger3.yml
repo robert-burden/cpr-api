@@ -2,8 +2,62 @@ openapi: 3.0.0
 info:
   title: Cloud Progress API
   version: beta-2020-jan
+  description: >
+    This spec documents Cloud Progress' external API.
+    For questions and bugs, and links to official clients in your language of choice, check out the repo at https://github.com/cloudprogress/cpr-api.
 servers:
 - url: https://cloudprogress.io
+components:
+  schemas:
+    ProgressRow:
+      type: object
+      properties:
+        # name: {type: string} # is this used anymore?
+        num: {type: integer, format: unsigned, description: "Numerator, i.e. number of completed items"}
+        denom: {type: integer, format: unsigned, description: "Denominator, i.e. total items in this ProgressRow"}
+        sort: {type: integer, format: unsigned, description: "Sort is used for overriding alphabetical order"}
+        forecast: {type: string, description: "Category name to use in ETA forecasting"}
+        # // which instructions does it support from (pause, skip, break)
+        # supports: {type: } # Supports []string `json:"supports"` # todo: json array spec
+    # type AuthBody struct {
+    #   ServiceAcctKey string `json:"svc_acct_key"`
+    #   TaskId string `json:"task_id"`
+    CreateTaskBody:
+      type: object
+      properties:
+        task_id: {type: string, format: uuid, description: "Optional. If missing or empty string, the server will create a unique ID for your task and return it in the response."}
+        svc_acct: {type: string, format: uuid, description: "Service account used for authentication"}
+        meta: {type: object, description: "Freeform dictionary. These will be visible in the API. 'shape' key is used for ETA prediction."}
+    CreateTaskResponse:
+      type: object
+      properties:
+        task_id: {type: string, format: uuid}
+    SetPathBody:
+      type: object
+      properties:
+        task_id: {type: string, format: uuid}
+        svc_acct: {type: string, format: uuid, description: "Service account used for authentication"}
+        path: {type: string, description: "Dotted string like 'outer.middle.inner'"}
+        patch: {$ref: '#/components/schemas/ProgressRow'}
+    SetPathResponse:
+      type: object
+      properties:
+        instruct:
+          type: object
+          description: >
+            If there's an instruction (i.e. an action from the UI) on this ProgressRow, this will be populated. Otherwise it will be null (todo: double-check that).
+            This is used for pausing, skipping, stopping etc, i.e. remote control. The value of 'action' is currently not specified, your program can interpret these strings however it likes. See also 'supports' in CreateTask.
+          properties:
+            userid: {type: string}
+            action: {type: string}
+    FinishTaskBody:
+      type: object
+      properties:
+        task_id: {type: string, format: uuid}
+        svc_acct: {type: string, format: uuid, description: "Service account used for authentication"}
+        active: {type: bool, description: "Optional. Pass true to 're-activate' i.e. 'un-finish' a task"}
+    FinishTaskResponse:
+      type: object
 paths:
   # todo: authorization, body schemas, ret schemas
   /task/merge/{task}:
@@ -12,13 +66,49 @@ paths:
       summary: Set path
       description: Update the ProgressRow at a path.
       tags: ['service-api']
+      security: [{svc_acct: []}]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPathBody'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPathResponse'
   /task/create:
     post:
       summary: Create task
       description: Create a task and get a taskId back. Call this before setting any paths.
       tags: ['service-api']
+      security: [{svc_acct: []}]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskBody'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTaskResponse'
   /task/finish/{task}:
     post:
       summary: Finish task
       description: Mark a task inactive, which removes it from 'active tasks' list in UI and makes it available for ETA prediction.
       tags: ['service-api']
+      security: [{svc_acct: []}]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinishTaskBody'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinishTaskResponse'
