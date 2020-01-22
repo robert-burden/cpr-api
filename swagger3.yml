@@ -61,6 +61,13 @@ paths:
       summary: Set path
       description: Update the ProgressRow at a path.
       tags: ['service-api']
+      parameters:
+      - in: path
+        name: task
+        schema:
+          type: string
+          format: uuid
+        description: taskId
       requestBody:
         content:
           application/json:
@@ -93,6 +100,13 @@ paths:
       summary: Finish task
       description: Mark a task inactive, which removes it from 'active tasks' list in UI and makes it available for ETA prediction.
       tags: ['service-api']
+      parameters:
+      - in: path
+        name: task
+        schema:
+          type: string
+          format: uuid
+        description: taskId
       requestBody:
         content:
           application/json:
