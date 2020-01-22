@@ -17,11 +17,7 @@ components:
         denom: {type: integer, format: unsigned, description: "Denominator, i.e. total items in this ProgressRow"}
         sort: {type: integer, format: unsigned, description: "Sort is used for overriding alphabetical order"}
         forecast: {type: string, description: "Category name to use in ETA forecasting"}
-        # // which instructions does it support from (pause, skip, break)
-        # supports: {type: } # Supports []string `json:"supports"` # todo: json array spec
-    # type AuthBody struct {
-    #   ServiceAcctKey string `json:"svc_acct_key"`
-    #   TaskId string `json:"task_id"`
+        supports: {type: array, items: {type: string}, description: "Which instruction actions (i.e. strings) does this ProgressRow support"}
     CreateTaskBody:
       type: object
       properties:
@@ -59,14 +55,12 @@ components:
     FinishTaskResponse:
       type: object
 paths:
-  # todo: authorization, body schemas, ret schemas
   /task/merge/{task}:
     post:
       operationId: SetPath
       summary: Set path
       description: Update the ProgressRow at a path.
       tags: ['service-api']
-      security: [{svc_acct: []}]
       requestBody:
         content:
           application/json:
@@ -83,7 +77,6 @@ paths:
       summary: Create task
       description: Create a task and get a taskId back. Call this before setting any paths.
       tags: ['service-api']
-      security: [{svc_acct: []}]
       requestBody:
         content:
           application/json:
@@ -100,7 +93,6 @@ paths:
       summary: Finish task
       description: Mark a task inactive, which removes it from 'active tasks' list in UI and makes it available for ETA prediction.
       tags: ['service-api']
-      security: [{svc_acct: []}]
       requestBody:
         content:
           application/json:
