@@ -51,7 +51,7 @@ components:
       properties:
         task_id: {type: string, format: uuid}
         svc_acct: {type: string, format: uuid, description: "Service account used for authentication"}
-        active: {type: bool, description: "Optional. Pass true to 're-activate' i.e. 'un-finish' a task"}
+        active: {type: boolean, description: "Optional. Pass true to 're-activate' i.e. 'un-finish' a task"}
     FinishTaskResponse:
       type: object
 paths:
