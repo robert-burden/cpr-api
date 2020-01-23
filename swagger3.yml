@@ -57,7 +57,7 @@ components:
 paths:
   /task/merge/{task}:
     post:
-      operationId: SetPath
+      operationId: setPath
       summary: Set path
       description: Update the ProgressRow at a path.
       tags: ['service-api']
@@ -66,7 +66,7 @@ paths:
         name: task
         schema:
           type: string
-          format: uuid
+          format: uuid 
         description: taskId
       requestBody:
         content:
@@ -75,12 +75,14 @@ paths:
               $ref: '#/components/schemas/SetPathBody'
       responses:
         '200':
+          description: JSON formatted response containing Instruction Object
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SetPathResponse'
   /task/create:
     post:
+      operationId: createTask
       summary: Create task
       description: Create a task and get a taskId back. Call this before setting any paths.
       tags: ['service-api']
@@ -91,17 +93,19 @@ paths:
               $ref: '#/components/schemas/CreateTaskBody'
       responses:
         '200':
+          description: JSON formatted response containing a taskId.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateTaskResponse'
   /task/finish/{task}:
     post:
+      operationId: finishTask
       summary: Finish task
       description: Mark a task inactive, which removes it from 'active tasks' list in UI and makes it available for ETA prediction.
       tags: ['service-api']
       parameters:
-      - in: path
+        in: path
         name: task
         schema:
           type: string
@@ -114,6 +118,7 @@ paths:
               $ref: '#/components/schemas/FinishTaskBody'
       responses:
         '200':
+          description: JSON formatted empty response.
           content:
             application/json:
               schema:
