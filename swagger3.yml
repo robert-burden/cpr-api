@@ -105,7 +105,7 @@ paths:
       description: Mark a task inactive, which removes it from 'active tasks' list in UI and makes it available for ETA prediction.
       tags: ['service-api']
       parameters:
-        in: path
+      - in: path
         name: task
         schema:
           type: string
