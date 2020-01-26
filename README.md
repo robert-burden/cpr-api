@@ -11,3 +11,4 @@ If you're having an issue with a specific client implementation, consider postin
 ## Official clients
 
 * [go](https://github.com/cloudprogress/cpr-go)
+* [python](https://github.com/cloudprogress/cpr-py)
