@@ -71,7 +71,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: taskId
+        description: taskId (but this is ignored, this route takes its taskId from the json body. pass any string you like here)
       requestBody:
         content:
           application/json:
@@ -114,7 +114,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: taskId
+        description: taskId (but this is ignored, this route takes its taskId from the json body. pass any string you like here)
       requestBody:
         content:
           application/json:
