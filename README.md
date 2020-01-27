@@ -12,3 +12,4 @@ If you're having an issue with a specific client implementation, consider postin
 
 * [go](https://github.com/cloudprogress/cpr-go)
 * [python](https://github.com/cloudprogress/cpr-py)
+* [nodejs](https://github.com/cloudprogress/cpr-js)
